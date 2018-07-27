@@ -122,6 +122,10 @@ var prepareBorderFromCustomAdded = function(row, col, borderObj) {
   border = extendDefaultBorder(border, borderObj);
   this.setCellMeta(row, col, 'borders', border);
 
+  if(!instance){
+      instance = this 
+  }
+  
   insertBorderIntoSettings(border);
 };
 
@@ -131,6 +135,9 @@ var prepareBorderFromCustomAdded = function(row, col, borderObj) {
  * @param {Object} rowObj
  */
 var prepareBorderFromCustomAddedRange = function(rowObj) {
+  if(!instance){
+      instance = this 
+  }
   var range = rowObj.range;
 
   for (var row = range.from.row; row <= range.to.row; row++) {
