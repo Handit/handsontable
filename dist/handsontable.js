@@ -24,7 +24,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  * Version: 0.34.4
- * Release date: 13/09/2017 (built at 13/09/2017 11:12:07)
+ * Release date: 13/09/2017 (built at 25/09/2018 17:39:23)
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -24189,210 +24189,210 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * @util
  */
 var SamplesGenerator = function () {
-  _createClass(SamplesGenerator, null, [{
-    key: 'SAMPLE_COUNT',
+    _createClass(SamplesGenerator, null, [{
+        key: 'SAMPLE_COUNT',
 
-    /**
-     * Number of samples to take of each value length.
-     *
-     * @type {Number}
-     */
-    get: function get() {
-      return 3;
-    }
-  }]);
+        /**
+         * Number of samples to take of each value length.
+         *
+         * @type {Number}
+         */
+        get: function get() {
+            return 3;
+        }
+    }]);
 
-  function SamplesGenerator(dataFactory) {
-    _classCallCheck(this, SamplesGenerator);
+    function SamplesGenerator(dataFactory) {
+        _classCallCheck(this, SamplesGenerator);
 
-    /**
-     * Samples prepared for calculations.
-     *
-     * @type {Map}
-     * @default {null}
-     */
-    this.samples = null;
-    /**
-     * Function which give the data to collect samples.
-     *
-     * @type {Function}
-     */
-    this.dataFactory = dataFactory;
-    /**
-     * Custom number of samples to take of each value length.
-     *
-     * @type {Number}
-     * @default {null}
-     */
-    this.customSampleCount = null;
-    /**
-     * `true` if duplicate samples collection should be allowed, `false` otherwise.
-     *
-     * @type {Boolean}
-     * @default {false}
-     */
-    this.allowDuplicates = false;
-  }
-
-  /**
-   * Get the sample count for this instance.
-   *
-   * @returns {Number}
-   */
-
-
-  _createClass(SamplesGenerator, [{
-    key: 'getSampleCount',
-    value: function getSampleCount() {
-      if (this.customSampleCount) {
-        return this.customSampleCount;
-      }
-      return SamplesGenerator.SAMPLE_COUNT;
-    }
-  }, {
-    key: 'setSampleCount',
-
-
-    /**
-     * Set the sample count.
-     *
-     * @param {Number} sampleCount Number of samples to be collected.
-     */
-    value: function setSampleCount(sampleCount) {
-      this.customSampleCount = sampleCount;
+        /**
+         * Samples prepared for calculations.
+         *
+         * @type {Map}
+         * @default {null}
+         */
+        this.samples = null;
+        /**
+         * Function which give the data to collect samples.
+         *
+         * @type {Function}
+         */
+        this.dataFactory = dataFactory;
+        /**
+         * Custom number of samples to take of each value length.
+         *
+         * @type {Number}
+         * @default {null}
+         */
+        this.customSampleCount = null;
+        /**
+         * `true` if duplicate samples collection should be allowed, `false` otherwise.
+         *
+         * @type {Boolean}
+         * @default {false}
+         */
+        this.allowDuplicates = false;
     }
 
     /**
-     * Set if the generator should accept duplicate values.
+     * Get the sample count for this instance.
      *
-     * @param {Boolean} allowDuplicates `true` to allow duplicate values.
+     * @returns {Number}
      */
 
-  }, {
-    key: 'setAllowDuplicates',
-    value: function setAllowDuplicates(allowDuplicates) {
-      this.allowDuplicates = allowDuplicates;
-    }
 
-    /**
-     * Generate samples for row. You can control which area should be sampled by passing `rowRange` object and `colRange` object.
-     *
-     * @param {Object|Number} rowRange
-     * @param {Object} colRange
-     * @returns {Object}
-     */
+    _createClass(SamplesGenerator, [{
+        key: 'getSampleCount',
+        value: function getSampleCount() {
+            if (this.customSampleCount) {
+                return this.customSampleCount;
+            }
+            return SamplesGenerator.SAMPLE_COUNT;
+        }
+    }, {
+        key: 'setSampleCount',
 
-  }, {
-    key: 'generateRowSamples',
-    value: function generateRowSamples(rowRange, colRange) {
-      return this.generateSamples('row', colRange, rowRange);
-    }
 
-    /**
-     * Generate samples for column. You can control which area should be sampled by passing `colRange` object and `rowRange` object.
-     *
-     * @param {Object} colRange Column index.
-     * @param {Object} rowRange Column index.
-     * @returns {Object}
-     */
-
-  }, {
-    key: 'generateColumnSamples',
-    value: function generateColumnSamples(colRange, rowRange) {
-      return this.generateSamples('col', rowRange, colRange);
-    }
-
-    /**
-     * Generate collection of samples.
-     *
-     * @param {String} type Type to generate. Can be `col` or `row`.
-     * @param {Object} range
-     * @param {Object|Number} specifierRange
-     * @returns {Map}
-     */
-
-  }, {
-    key: 'generateSamples',
-    value: function generateSamples(type, range, specifierRange) {
-      var _this = this;
-
-      var samples = new Map();
-
-      if (typeof specifierRange === 'number') {
-        specifierRange = { from: specifierRange, to: specifierRange };
-      }
-      (0, _number.rangeEach)(specifierRange.from, specifierRange.to, function (index) {
-        var sample = _this.generateSample(type, range, index);
-
-        samples.set(index, sample);
-      });
-
-      return samples;
-    }
-
-    /**
-     * Generate sample for specified type (`row` or `col`).
-     *
-     * @param {String} type Samples type `row` or `col`.
-     * @param {Object} range
-     * @param {Number} specifierValue
-     * @returns {Map}
-     */
-
-  }, {
-    key: 'generateSample',
-    value: function generateSample(type, range, specifierValue) {
-      var _this2 = this;
-
-      var samples = new Map();
-      var sampledValues = [];
-      var length = void 0;
-
-      (0, _number.rangeEach)(range.from, range.to, function (index) {
-        var value = void 0;
-
-        if (type === 'row') {
-          value = _this2.dataFactory(specifierValue, index);
-        } else if (type === 'col') {
-          value = _this2.dataFactory(index, specifierValue);
-        } else {
-          throw new Error('Unsupported sample type');
+        /**
+         * Set the sample count.
+         *
+         * @param {Number} sampleCount Number of samples to be collected.
+         */
+        value: function setSampleCount(sampleCount) {
+            this.customSampleCount = sampleCount;
         }
 
-        if ((0, _object.isObject)(value)) {
-          length = Object.keys(value).length;
-        } else if (Array.isArray(value)) {
-          length = value.length;
-        } else {
-          length = (0, _mixed.stringify)(value).length;
+        /**
+         * Set if the generator should accept duplicate values.
+         *
+         * @param {Boolean} allowDuplicates `true` to allow duplicate values.
+         */
+
+    }, {
+        key: 'setAllowDuplicates',
+        value: function setAllowDuplicates(allowDuplicates) {
+            this.allowDuplicates = allowDuplicates;
         }
 
-        if (!samples.has(length)) {
-          samples.set(length, {
-            needed: _this2.getSampleCount(),
-            strings: []
-          });
+        /**
+         * Generate samples for row. You can control which area should be sampled by passing `rowRange` object and `colRange` object.
+         *
+         * @param {Object|Number} rowRange
+         * @param {Object} colRange
+         * @returns {Object}
+         */
+
+    }, {
+        key: 'generateRowSamples',
+        value: function generateRowSamples(rowRange, colRange) {
+            return this.generateSamples('row', colRange, rowRange);
         }
-        var sample = samples.get(length);
 
-        if (sample.needed) {
-          var duplicate = sampledValues.indexOf(value) > -1;
+        /**
+         * Generate samples for column. You can control which area should be sampled by passing `colRange` object and `rowRange` object.
+         *
+         * @param {Object} colRange Column index.
+         * @param {Object} rowRange Column index.
+         * @returns {Object}
+         */
 
-          if (!duplicate || _this2.allowDuplicates) {
-            var computedKey = type === 'row' ? 'col' : 'row';
-
-            sample.strings.push(_defineProperty({ value: value }, computedKey, index));
-            sampledValues.push(value);
-            sample.needed--;
-          }
+    }, {
+        key: 'generateColumnSamples',
+        value: function generateColumnSamples(colRange, rowRange) {
+            return this.generateSamples('col', rowRange, colRange);
         }
-      });
 
-      return samples;
-    }
-  }]);
+        /**
+         * Generate collection of samples.
+         *
+         * @param {String} type Type to generate. Can be `col` or `row`.
+         * @param {Object} range
+         * @param {Object|Number} specifierRange
+         * @returns {Map}
+         */
 
-  return SamplesGenerator;
+    }, {
+        key: 'generateSamples',
+        value: function generateSamples(type, range, specifierRange) {
+            var _this = this;
+
+            var samples = new Map();
+
+            if (typeof specifierRange === 'number') {
+                specifierRange = { from: specifierRange, to: specifierRange };
+            }
+            (0, _number.rangeEach)(specifierRange.from, specifierRange.to, function (index) {
+                var sample = _this.generateSample(type, range, index);
+
+                samples.set(index, sample);
+            });
+
+            return samples;
+        }
+
+        /**
+         * Generate sample for specified type (`row` or `col`).
+         *
+         * @param {String} type Samples type `row` or `col`.
+         * @param {Object} range
+         * @param {Number} specifierValue
+         * @returns {Map}
+         */
+
+    }, {
+        key: 'generateSample',
+        value: function generateSample(type, range, specifierValue) {
+            var _this2 = this;
+
+            var samples = new Map();
+            var sampledValues = [];
+            var length = void 0;
+
+            (0, _number.rangeEach)(range.from, range.to, function (index) {
+                var value = void 0;
+
+                if (type === 'row') {
+                    value = _this2.dataFactory(specifierValue, index);
+                } else if (type === 'col') {
+                    value = _this2.dataFactory(index, specifierValue);
+                } else {
+                    throw new Error('Unsupported sample type');
+                }
+
+                if ((0, _object.isObject)(value)) {
+                    length = value.toString().length;
+                } else if (Array.isArray(value)) {
+                    length = value.length;
+                } else {
+                    length = (0, _mixed.stringify)(value).length;
+                }
+
+                if (!samples.has(length)) {
+                    samples.set(length, {
+                        needed: _this2.getSampleCount(),
+                        strings: []
+                    });
+                }
+                var sample = samples.get(length);
+
+                if (sample.needed) {
+                    var duplicate = sampledValues.indexOf(value) > -1;
+
+                    if (!duplicate || _this2.allowDuplicates) {
+                        var computedKey = type === 'row' ? 'col' : 'row';
+
+                        sample.strings.push(_defineProperty({ value: value }, computedKey, index));
+                        sampledValues.push(value);
+                        sample.needed--;
+                    }
+                }
+            });
+
+            return samples;
+        }
+    }]);
+
+    return SamplesGenerator;
 }();
 
 exports.default = SamplesGenerator;
@@ -25841,7 +25841,7 @@ Handsontable.DefaultSettings = _defaultSettings2.default;
 Handsontable.EventManager = _eventManager2.default;
 Handsontable._getListenersCounter = _eventManager.getListenersCounter; // For MemoryLeak tests
 
-Handsontable.buildDate = '13/09/2017 11:12:07';
+Handsontable.buildDate = '25/09/2018 17:39:23';
 Handsontable.packageName = 'handsontable';
 Handsontable.version = '0.34.4';
 
@@ -28258,7 +28258,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_213__;
 /* 214 */
 /***/ (function(module, exports) {
 
-
+// removed by extract-text-webpack-plugin
 
 /***/ }),
 /* 215 */
