@@ -24,7 +24,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  * Version: 0.34.4
- * Release date: 13/09/2017 (built at 26/09/2018 09:49:26)
+ * Release date: 13/09/2017 (built at 26/09/2018 10:43:21)
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -25841,7 +25841,7 @@ Handsontable.DefaultSettings = _defaultSettings2.default;
 Handsontable.EventManager = _eventManager2.default;
 Handsontable._getListenersCounter = _eventManager.getListenersCounter; // For MemoryLeak tests
 
-Handsontable.buildDate = '26/09/2018 09:49:26';
+Handsontable.buildDate = '26/09/2018 10:43:21';
 Handsontable.packageName = 'handsontable';
 Handsontable.version = '0.34.4';
 
@@ -33433,7 +33433,7 @@ var AutoColumnSize = function (_BasePlugin) {
         key: 'getColumnWidth',
         value: function getColumnWidth(col) {
             var defaultWidth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : void 0;
-            var keepMinimum = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+            var keepMinimum = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
             var width = defaultWidth;
 
