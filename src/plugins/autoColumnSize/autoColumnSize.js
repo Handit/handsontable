@@ -101,10 +101,14 @@ class AutoColumnSize extends BasePlugin {
         // this.samplesGenerator = new SamplesGenerator((row, col) => this.hot.getDataAtCell(row, col));
         this.samplesGenerator = new SamplesGenerator((row, col) => {
             let mergeCells = this.hot.mergeCells
-            if (mergeCells && mergeCells.mergedCellInfoCollection.getInfo(row, col)) {
-                return ''
+            let dataAtCell = this.hot.getDataAtCell(row, col)
+            if (mergeCells) {
+                let mergeInfo = mergeCells.mergedCellInfoCollection.getInfo(row, col)
+                if (mergeInfo && mergeInfo.colspan > 1) {
+                    return ''
+                }
             }
-            return this.hot.getDataAtCell(row, col)
+            return dataAtCell
         });
         /**
          * `true` only if the first calculation was performed

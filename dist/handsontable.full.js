@@ -24,7 +24,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  * Version: 0.34.4
- * Release date: 13/09/2017 (built at 01/10/2018 10:14:50)
+ * Release date: 13/09/2017 (built at 01/10/2018 11:42:17)
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -42689,7 +42689,7 @@ Handsontable.DefaultSettings = _defaultSettings2.default;
 Handsontable.EventManager = _eventManager2.default;
 Handsontable._getListenersCounter = _eventManager.getListenersCounter; // For MemoryLeak tests
 
-Handsontable.buildDate = '01/10/2018 10:14:50';
+Handsontable.buildDate = '01/10/2018 11:42:17';
 Handsontable.packageName = 'handsontable';
 Handsontable.version = '0.34.4';
 
@@ -54780,10 +54780,14 @@ var AutoColumnSize = function (_BasePlugin) {
         // this.samplesGenerator = new SamplesGenerator((row, col) => this.hot.getDataAtCell(row, col));
         _this.samplesGenerator = new _samplesGenerator2.default(function (row, col) {
             var mergeCells = _this.hot.mergeCells;
-            if (mergeCells && mergeCells.mergedCellInfoCollection.getInfo(row, col)) {
-                return '';
+            var dataAtCell = _this.hot.getDataAtCell(row, col);
+            if (mergeCells) {
+                var mergeInfo = mergeCells.mergedCellInfoCollection.getInfo(row, col);
+                if (mergeInfo && mergeInfo.colspan > 1) {
+                    return '';
+                }
             }
-            return _this.hot.getDataAtCell(row, col);
+            return dataAtCell;
         });
         /**
          * `true` only if the first calculation was performed
