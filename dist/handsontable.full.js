@@ -24,7 +24,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  * Version: 0.34.4
- * Release date: 13/09/2017 (built at 01/10/2018 11:42:17)
+ * Release date: 13/09/2017 (built at 29/07/2019 10:42:58)
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -42689,7 +42689,7 @@ Handsontable.DefaultSettings = _defaultSettings2.default;
 Handsontable.EventManager = _eventManager2.default;
 Handsontable._getListenersCounter = _eventManager.getListenersCounter; // For MemoryLeak tests
 
-Handsontable.buildDate = '01/10/2018 11:42:17';
+Handsontable.buildDate = '29/07/2019 10:42:58';
 Handsontable.packageName = 'handsontable';
 Handsontable.version = '0.34.4';
 
@@ -50842,188 +50842,193 @@ var BAD_VALUE_CLASS = 'htBadValue';
  * @param {Object} cellProperties Cell properties (shared by cell renderer and editor)
  */
 function checkboxRenderer(instance, TD, row, col, prop, value, cellProperties) {
-  (0, _index.getRenderer)('base').apply(this, arguments);
+    (0, _index.getRenderer)('base').apply(this, arguments);
 
-  var eventManager = registerEvents(instance);
-  var input = createInput();
-  var labelOptions = cellProperties.label;
-  var badValue = false;
+    var eventManager = registerEvents(instance);
+    var input = createInput();
+    var labelOptions = cellProperties.label;
+    var badValue = false;
 
-  if (typeof cellProperties.checkedTemplate === 'undefined') {
-    cellProperties.checkedTemplate = true;
-  }
-  if (typeof cellProperties.uncheckedTemplate === 'undefined') {
-    cellProperties.uncheckedTemplate = false;
-  }
-
-  (0, _element.empty)(TD); // TODO identify under what circumstances this line can be removed
-
-  if (value === cellProperties.checkedTemplate || (0, _string.equalsIgnoreCase)(value, cellProperties.checkedTemplate)) {
-    input.checked = true;
-  } else if (value === cellProperties.uncheckedTemplate || (0, _string.equalsIgnoreCase)(value, cellProperties.uncheckedTemplate)) {
-    input.checked = false;
-  } else if (value === null) {
-    // default value
-    (0, _element.addClass)(input, 'noValue');
-  } else {
-    input.style.display = 'none';
-    (0, _element.addClass)(input, BAD_VALUE_CLASS);
-    badValue = true;
-  }
-
-  input.setAttribute('data-row', row);
-  input.setAttribute('data-col', col);
-
-  if (!badValue && labelOptions) {
-    var labelText = '';
-
-    if (labelOptions.value) {
-      labelText = typeof labelOptions.value === 'function' ? labelOptions.value.call(this, row, col, prop, value) : labelOptions.value;
-    } else if (labelOptions.property) {
-      labelText = instance.getDataAtRowProp(row, labelOptions.property);
+    if (typeof cellProperties.checkedTemplate === 'undefined') {
+        cellProperties.checkedTemplate = true;
     }
-    var label = createLabel(labelText);
+    if (typeof cellProperties.uncheckedTemplate === 'undefined') {
+        cellProperties.uncheckedTemplate = false;
+    }
 
-    if (labelOptions.position === 'before') {
-      label.appendChild(input);
+    (0, _element.empty)(TD); // TODO identify under what circumstances this line can be removed
+
+    if (value === cellProperties.checkedTemplate || (0, _string.equalsIgnoreCase)(value, cellProperties.checkedTemplate)) {
+        input.checked = true;
+    } else if (value === cellProperties.uncheckedTemplate || (0, _string.equalsIgnoreCase)(value, cellProperties.uncheckedTemplate)) {
+        input.checked = false;
+    } else if (value === null) {
+        // default value
+        (0, _element.addClass)(input, 'noValue');
     } else {
-      label.insertBefore(input, label.firstChild);
-    }
-    input = label;
-  }
-
-  TD.appendChild(input);
-
-  if (badValue) {
-    TD.appendChild(document.createTextNode('#bad-value#'));
-  }
-
-  if (!isListeningKeyDownEvent.has(instance)) {
-    isListeningKeyDownEvent.set(instance, true);
-    instance.addHook('beforeKeyDown', onBeforeKeyDown);
-  }
-
-  /**
-   * On before key down DOM listener.
-   *
-   * @private
-   * @param {Event} event
-   */
-  function onBeforeKeyDown(event) {
-    var toggleKeys = 'SPACE|ENTER';
-    var switchOffKeys = 'DELETE|BACKSPACE';
-    var isKeyCode = (0, _function.partial)(_unicode.isKey, event.keyCode);
-
-    if (isKeyCode(toggleKeys + '|' + switchOffKeys) && !(0, _event.isImmediatePropagationStopped)(event)) {
-      eachSelectedCheckboxCell(function () {
-        (0, _event.stopImmediatePropagation)(event);
-        event.preventDefault();
-      });
-    }
-    if (isKeyCode(toggleKeys)) {
-      changeSelectedCheckboxesState();
-    }
-    if (isKeyCode(switchOffKeys)) {
-      changeSelectedCheckboxesState(true);
-    }
-  }
-
-  /**
-   * Change checkbox checked property
-   *
-   * @private
-   * @param {Boolean} [uncheckCheckbox=false]
-   */
-  function changeSelectedCheckboxesState() {
-    var uncheckCheckbox = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
-    var selRange = instance.getSelectedRange();
-
-    if (!selRange) {
-      return;
+        input.style.display = 'none';
+        (0, _element.addClass)(input, BAD_VALUE_CLASS);
+        badValue = true;
     }
 
-    var topLeft = selRange.getTopLeftCorner();
-    var bottomRight = selRange.getBottomRightCorner();
-    var changes = [];
+    input.setAttribute('data-row', row);
+    input.setAttribute('data-col', col);
 
-    for (var _row = topLeft.row; _row <= bottomRight.row; _row += 1) {
-      for (var _col = topLeft.col; _col <= bottomRight.col; _col += 1) {
-        var _cellProperties = instance.getCellMeta(_row, _col);
+    if (!badValue && labelOptions) {
+        var labelText = '';
 
-        if (_cellProperties.type !== 'checkbox') {
-          return;
+        if (labelOptions.value) {
+            labelText = typeof labelOptions.value === 'function' ? labelOptions.value.call(this, row, col, prop, value) : labelOptions.value;
+        } else if (labelOptions.property) {
+            labelText = instance.getDataAtRowProp(row, labelOptions.property);
         }
+        var label = createLabel(labelText);
 
-        /* eslint-disable no-continue */
-        if (_cellProperties.readOnly === true) {
-          continue;
-        }
-
-        if (typeof _cellProperties.checkedTemplate === 'undefined') {
-          _cellProperties.checkedTemplate = true;
-        }
-        if (typeof _cellProperties.uncheckedTemplate === 'undefined') {
-          _cellProperties.uncheckedTemplate = false;
-        }
-
-        var dataAtCell = instance.getDataAtCell(_row, _col);
-
-        if (uncheckCheckbox === false) {
-          if (dataAtCell === _cellProperties.checkedTemplate) {
-            changes.push([_row, _col, _cellProperties.uncheckedTemplate]);
-          } else if ([_cellProperties.uncheckedTemplate, null, void 0].indexOf(dataAtCell) !== -1) {
-            changes.push([_row, _col, _cellProperties.checkedTemplate]);
-          }
+        if (labelOptions.position === 'before') {
+            label.appendChild(input);
         } else {
-          changes.push([_row, _col, _cellProperties.uncheckedTemplate]);
+            label.insertBefore(input, label.firstChild);
         }
-      }
+        input = label;
     }
 
-    if (changes.length > 0) {
-      instance.setDataAtCell(changes);
+    TD.appendChild(input);
+
+    if (badValue) {
+        TD.appendChild(document.createTextNode('#bad-value#'));
     }
-  }
 
-  /**
-   * Call callback for each found selected cell with checkbox type.
-   *
-   * @private
-   * @param {Function} callback
-   */
-  function eachSelectedCheckboxCell(callback) {
-    var selRange = instance.getSelectedRange();
-
-    if (!selRange) {
-      return;
+    if (!isListeningKeyDownEvent.has(instance)) {
+        isListeningKeyDownEvent.set(instance, true);
+        instance.addHook('beforeKeyDown', onBeforeKeyDown);
     }
-    var topLeft = selRange.getTopLeftCorner();
-    var bottomRight = selRange.getBottomRightCorner();
 
-    for (var _row2 = topLeft.row; _row2 <= bottomRight.row; _row2++) {
-      for (var _col2 = topLeft.col; _col2 <= bottomRight.col; _col2++) {
-        var _cellProperties2 = instance.getCellMeta(_row2, _col2);
+    /**
+     * On before key down DOM listener.
+     *
+     * @private
+     * @param {Event} event
+     */
+    function onBeforeKeyDown(event) {
+        var toggleKeys = 'SPACE|ENTER';
+        var switchOffKeys = 'DELETE|BACKSPACE';
+        var isKeyCode = (0, _function.partial)(_unicode.isKey, event.keyCode);
 
-        if (_cellProperties2.type !== 'checkbox') {
-          return;
+        if (isKeyCode(toggleKeys + '|' + switchOffKeys) && !(0, _event.isImmediatePropagationStopped)(event)) {
+            eachSelectedCheckboxCell(function () {
+                (0, _event.stopImmediatePropagation)(event);
+                event.preventDefault();
+            });
+        }
+        if (isKeyCode(toggleKeys)) {
+            changeSelectedCheckboxesState();
+        }
+        if (isKeyCode(switchOffKeys)) {
+            changeSelectedCheckboxesState(true, true);
+        }
+    }
+
+    /**
+     * Change checkbox checked property
+     *
+     * @private
+     * @param {Boolean} [uncheckCheckbox=false]
+     */
+    function changeSelectedCheckboxesState() {
+        var uncheckCheckbox = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+        var isDelete = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+        var selRange = instance.getSelectedRange();
+
+        if (!selRange) {
+            return;
         }
 
-        var cell = instance.getCell(_row2, _col2);
+        var topLeft = selRange.getTopLeftCorner();
+        var bottomRight = selRange.getBottomRightCorner();
+        var changes = [];
 
-        if (cell == null) {
+        for (var _row = topLeft.row; _row <= bottomRight.row; _row += 1) {
+            for (var _col = topLeft.col; _col <= bottomRight.col; _col += 1) {
+                var _cellProperties = instance.getCellMeta(_row, _col);
 
-          callback(_row2, _col2, _cellProperties2);
-        } else {
-          var checkboxes = cell.querySelectorAll('input[type=checkbox]');
+                if (_cellProperties.type !== 'checkbox') {
+                    return;
+                }
 
-          if (checkboxes.length > 0 && !_cellProperties2.readOnly) {
-            callback(checkboxes);
-          }
+                /* eslint-disable no-continue */
+                if (_cellProperties.readOnly === true) {
+                    continue;
+                }
+
+                if (typeof _cellProperties.checkedTemplate === 'undefined') {
+                    _cellProperties.checkedTemplate = true;
+                }
+                if (typeof _cellProperties.uncheckedTemplate === 'undefined') {
+                    _cellProperties.uncheckedTemplate = false;
+                }
+
+                var dataAtCell = instance.getDataAtCell(_row, _col);
+
+                if (uncheckCheckbox === false) {
+                    if (dataAtCell === _cellProperties.checkedTemplate) {
+                        changes.push([_row, _col, _cellProperties.uncheckedTemplate]);
+                    } else if ([_cellProperties.uncheckedTemplate, null, void 0].indexOf(dataAtCell) !== -1) {
+                        changes.push([_row, _col, _cellProperties.checkedTemplate]);
+                    }
+                } else {
+                    if (isDelete) {
+                        changes.push([_row, _col, null]);
+                    } else {
+                        changes.push([_row, _col, _cellProperties.uncheckedTemplate]);
+                    }
+                }
+            }
         }
-      }
+
+        if (changes.length > 0) {
+            instance.setDataAtCell(changes);
+        }
     }
-  }
+
+    /**
+     * Call callback for each found selected cell with checkbox type.
+     *
+     * @private
+     * @param {Function} callback
+     */
+    function eachSelectedCheckboxCell(callback) {
+        var selRange = instance.getSelectedRange();
+
+        if (!selRange) {
+            return;
+        }
+        var topLeft = selRange.getTopLeftCorner();
+        var bottomRight = selRange.getBottomRightCorner();
+
+        for (var _row2 = topLeft.row; _row2 <= bottomRight.row; _row2++) {
+            for (var _col2 = topLeft.col; _col2 <= bottomRight.col; _col2++) {
+                var _cellProperties2 = instance.getCellMeta(_row2, _col2);
+
+                if (_cellProperties2.type !== 'checkbox') {
+                    return;
+                }
+
+                var cell = instance.getCell(_row2, _col2);
+
+                if (cell == null) {
+
+                    callback(_row2, _col2, _cellProperties2);
+                } else {
+                    var checkboxes = cell.querySelectorAll('input[type=checkbox]');
+
+                    if (checkboxes.length > 0 && !_cellProperties2.readOnly) {
+                        callback(checkboxes);
+                    }
+                }
+            }
+        }
+    }
 }
 
 /**
@@ -51033,24 +51038,24 @@ function checkboxRenderer(instance, TD, row, col, prop, value, cellProperties) {
  * @returns {EventManager}
  */
 function registerEvents(instance) {
-  var eventManager = isCheckboxListenerAdded.get(instance);
+    var eventManager = isCheckboxListenerAdded.get(instance);
 
-  if (!eventManager) {
-    eventManager = new _eventManager2.default(instance);
-    eventManager.addEventListener(instance.rootElement, 'click', function (event) {
-      return onClick(event, instance);
-    });
-    eventManager.addEventListener(instance.rootElement, 'mouseup', function (event) {
-      return onMouseUp(event, instance);
-    });
-    eventManager.addEventListener(instance.rootElement, 'change', function (event) {
-      return onChange(event, instance);
-    });
+    if (!eventManager) {
+        eventManager = new _eventManager2.default(instance);
+        eventManager.addEventListener(instance.rootElement, 'click', function (event) {
+            return onClick(event, instance);
+        });
+        eventManager.addEventListener(instance.rootElement, 'mouseup', function (event) {
+            return onMouseUp(event, instance);
+        });
+        eventManager.addEventListener(instance.rootElement, 'change', function (event) {
+            return onChange(event, instance);
+        });
 
-    isCheckboxListenerAdded.set(instance, eventManager);
-  }
+        isCheckboxListenerAdded.set(instance, eventManager);
+    }
 
-  return eventManager;
+    return eventManager;
 }
 
 /**
@@ -51059,14 +51064,14 @@ function registerEvents(instance) {
  * @returns {Node}
  */
 function createInput() {
-  var input = document.createElement('input');
+    var input = document.createElement('input');
 
-  input.className = 'htCheckboxRendererInput';
-  input.type = 'checkbox';
-  input.setAttribute('autocomplete', 'off');
-  input.setAttribute('tabindex', '-1');
+    input.className = 'htCheckboxRendererInput';
+    input.type = 'checkbox';
+    input.setAttribute('autocomplete', 'off');
+    input.setAttribute('tabindex', '-1');
 
-  return input.cloneNode(false);
+    return input.cloneNode(false);
 }
 
 /**
@@ -51075,12 +51080,12 @@ function createInput() {
  * @returns {Node}
  */
 function createLabel(text) {
-  var label = document.createElement('label');
+    var label = document.createElement('label');
 
-  label.className = 'htCheckboxRendererLabel';
-  label.appendChild(document.createTextNode(text));
+    label.className = 'htCheckboxRendererLabel';
+    label.appendChild(document.createTextNode(text));
 
-  return label.cloneNode(true);
+    return label.cloneNode(true);
 }
 
 /**
@@ -51091,10 +51096,10 @@ function createLabel(text) {
  * @param {Object} instance Handsontable instance.
  */
 function onMouseUp(event, instance) {
-  if (!isCheckboxInput(event.target)) {
-    return;
-  }
-  setTimeout(instance.listen, 10);
+    if (!isCheckboxInput(event.target)) {
+        return;
+    }
+    setTimeout(instance.listen, 10);
 }
 
 /**
@@ -51105,17 +51110,17 @@ function onMouseUp(event, instance) {
  * @param {Object} instance Handsontable instance.
  */
 function onClick(event, instance) {
-  if (!isCheckboxInput(event.target)) {
-    return false;
-  }
+    if (!isCheckboxInput(event.target)) {
+        return false;
+    }
 
-  var row = parseInt(event.target.getAttribute('data-row'), 10);
-  var col = parseInt(event.target.getAttribute('data-col'), 10);
-  var cellProperties = instance.getCellMeta(row, col);
+    var row = parseInt(event.target.getAttribute('data-row'), 10);
+    var col = parseInt(event.target.getAttribute('data-col'), 10);
+    var cellProperties = instance.getCellMeta(row, col);
 
-  if (cellProperties.readOnly) {
-    event.preventDefault();
-  }
+    if (cellProperties.readOnly) {
+        event.preventDefault();
+    }
 }
 
 /**
@@ -51127,25 +51132,25 @@ function onClick(event, instance) {
  * @returns {Boolean}
  */
 function onChange(event, instance) {
-  if (!isCheckboxInput(event.target)) {
-    return false;
-  }
-
-  var row = parseInt(event.target.getAttribute('data-row'), 10);
-  var col = parseInt(event.target.getAttribute('data-col'), 10);
-  var cellProperties = instance.getCellMeta(row, col);
-
-  if (!cellProperties.readOnly) {
-    var newCheckboxValue = null;
-
-    if (event.target.checked) {
-      newCheckboxValue = cellProperties.uncheckedTemplate === void 0 ? true : cellProperties.checkedTemplate;
-    } else {
-      newCheckboxValue = cellProperties.uncheckedTemplate === void 0 ? false : cellProperties.uncheckedTemplate;
+    if (!isCheckboxInput(event.target)) {
+        return false;
     }
 
-    instance.setDataAtCell(row, col, newCheckboxValue);
-  }
+    var row = parseInt(event.target.getAttribute('data-row'), 10);
+    var col = parseInt(event.target.getAttribute('data-col'), 10);
+    var cellProperties = instance.getCellMeta(row, col);
+
+    if (!cellProperties.readOnly) {
+        var newCheckboxValue = null;
+
+        if (event.target.checked) {
+            newCheckboxValue = cellProperties.uncheckedTemplate === void 0 ? true : cellProperties.checkedTemplate;
+        } else {
+            newCheckboxValue = cellProperties.uncheckedTemplate === void 0 ? false : cellProperties.uncheckedTemplate;
+        }
+
+        instance.setDataAtCell(row, col, newCheckboxValue);
+    }
 }
 
 /**
@@ -51156,7 +51161,7 @@ function onChange(event, instance) {
  * @returns {Boolean}
  */
 function isCheckboxInput(element) {
-  return element.tagName === 'INPUT' && element.getAttribute('type') === 'checkbox';
+    return element.tagName === 'INPUT' && element.getAttribute('type') === 'checkbox';
 }
 
 exports.default = checkboxRenderer;
