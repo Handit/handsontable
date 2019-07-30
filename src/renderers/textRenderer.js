@@ -1,6 +1,6 @@
-import {empty, fastInnerText} from './../helpers/dom/element';
-import {stringify} from './../helpers/mixed';
-import {getRenderer} from './index';
+import { empty, fastInnerText } from './../helpers/dom/element';
+import { stringify } from './../helpers/mixed';
+import { getRenderer } from './index';
 
 /**
  * Default text renderer
@@ -16,31 +16,35 @@ import {getRenderer} from './index';
  * @param {Object} cellProperties Cell properties (shared by cell renderer and editor)
  */
 function textRenderer(instance, TD, row, col, prop, value, cellProperties) {
-  getRenderer('base').apply(this, arguments);
+    getRenderer('base').apply(this, arguments);
 
-  if (!value && cellProperties.placeholder) {
-    value = cellProperties.placeholder;
-  }
+    if (!value && cellProperties.placeholder) {
+        if (typeof cellProperties.placeholder === "function") {
+            value = cellProperties.placeholder(instance, row, col, cellProperties)
+        } else {
+            value = cellProperties.placeholder;
+        }
+    }
 
-  var escaped = stringify(value);
+    var escaped = stringify(value);
 
-  if (!instance.getSettings().trimWhitespace) {
-    escaped = escaped.replace(/ /g, String.fromCharCode(160));
-  }
+    if (!instance.getSettings().trimWhitespace) {
+        escaped = escaped.replace(/ /g, String.fromCharCode(160));
+    }
 
-  if (cellProperties.rendererTemplate) {
-    empty(TD);
-    var TEMPLATE = document.createElement('TEMPLATE');
-    TEMPLATE.setAttribute('bind', '{{}}');
-    TEMPLATE.innerHTML = cellProperties.rendererTemplate;
-    HTMLTemplateElement.decorate(TEMPLATE);
-    TEMPLATE.model = instance.getSourceDataAtRow(row);
-    TD.appendChild(TEMPLATE);
+    if (cellProperties.rendererTemplate) {
+        empty(TD);
+        var TEMPLATE = document.createElement('TEMPLATE');
+        TEMPLATE.setAttribute('bind', '{{}}');
+        TEMPLATE.innerHTML = cellProperties.rendererTemplate;
+        HTMLTemplateElement.decorate(TEMPLATE);
+        TEMPLATE.model = instance.getSourceDataAtRow(row);
+        TD.appendChild(TEMPLATE);
 
-  } else {
-    // this is faster than innerHTML. See: https://github.com/handsontable/handsontable/wiki/JavaScript-&-DOM-performance-tips
-    fastInnerText(TD, escaped);
-  }
+    } else {
+        // this is faster than innerHTML. See: https://github.com/handsontable/handsontable/wiki/JavaScript-&-DOM-performance-tips
+        fastInnerText(TD, escaped);
+    }
 }
 
 export default textRenderer;

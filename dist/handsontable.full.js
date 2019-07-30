@@ -24,7 +24,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  * Version: 0.34.4
- * Release date: 13/09/2017 (built at 29/07/2019 10:42:58)
+ * Release date: 13/09/2017 (built at 30/07/2019 11:19:36)
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -42689,11 +42689,11 @@ Handsontable.DefaultSettings = _defaultSettings2.default;
 Handsontable.EventManager = _eventManager2.default;
 Handsontable._getListenersCounter = _eventManager.getListenersCounter; // For MemoryLeak tests
 
-Handsontable.buildDate = '29/07/2019 10:42:58';
+Handsontable.buildDate = '30/07/2019 11:19:36';
 Handsontable.packageName = 'handsontable';
 Handsontable.version = '0.34.4';
 
-var baseVersion = '';
+var baseVersion = undefined;
 
 if (baseVersion) {
   Handsontable.baseVersion = baseVersion;
@@ -51336,30 +51336,34 @@ var _index = __webpack_require__(10);
  * @param {Object} cellProperties Cell properties (shared by cell renderer and editor)
  */
 function textRenderer(instance, TD, row, col, prop, value, cellProperties) {
-  (0, _index.getRenderer)('base').apply(this, arguments);
+    (0, _index.getRenderer)('base').apply(this, arguments);
 
-  if (!value && cellProperties.placeholder) {
-    value = cellProperties.placeholder;
-  }
+    if (!value && cellProperties.placeholder) {
+        if (typeof cellProperties.placeholder === "function") {
+            value = cellProperties.placeholder(instance, row, col, cellProperties);
+        } else {
+            value = cellProperties.placeholder;
+        }
+    }
 
-  var escaped = (0, _mixed.stringify)(value);
+    var escaped = (0, _mixed.stringify)(value);
 
-  if (!instance.getSettings().trimWhitespace) {
-    escaped = escaped.replace(/ /g, String.fromCharCode(160));
-  }
+    if (!instance.getSettings().trimWhitespace) {
+        escaped = escaped.replace(/ /g, String.fromCharCode(160));
+    }
 
-  if (cellProperties.rendererTemplate) {
-    (0, _element.empty)(TD);
-    var TEMPLATE = document.createElement('TEMPLATE');
-    TEMPLATE.setAttribute('bind', '{{}}');
-    TEMPLATE.innerHTML = cellProperties.rendererTemplate;
-    HTMLTemplateElement.decorate(TEMPLATE);
-    TEMPLATE.model = instance.getSourceDataAtRow(row);
-    TD.appendChild(TEMPLATE);
-  } else {
-    // this is faster than innerHTML. See: https://github.com/handsontable/handsontable/wiki/JavaScript-&-DOM-performance-tips
-    (0, _element.fastInnerText)(TD, escaped);
-  }
+    if (cellProperties.rendererTemplate) {
+        (0, _element.empty)(TD);
+        var TEMPLATE = document.createElement('TEMPLATE');
+        TEMPLATE.setAttribute('bind', '{{}}');
+        TEMPLATE.innerHTML = cellProperties.rendererTemplate;
+        HTMLTemplateElement.decorate(TEMPLATE);
+        TEMPLATE.model = instance.getSourceDataAtRow(row);
+        TD.appendChild(TEMPLATE);
+    } else {
+        // this is faster than innerHTML. See: https://github.com/handsontable/handsontable/wiki/JavaScript-&-DOM-performance-tips
+        (0, _element.fastInnerText)(TD, escaped);
+    }
 }
 
 exports.default = textRenderer;
